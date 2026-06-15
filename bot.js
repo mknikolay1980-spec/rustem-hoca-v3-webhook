@@ -69,7 +69,6 @@ async function sendSignal() {
 }
 
 console.log('RUSTEM HOCA V3 BOT started...');
-console.log('Premium Channel ID:', premiumId);
 
 // Old auto-signal system disabled. Using TradingView Webhook now.
 // setTimeout(sendSignal, 10000);
@@ -80,6 +79,7 @@ const app = express();
 app.use(express.json());
 
 // TradingView Webhook Endpoint
+app.get('/webhook', (req, res) => res.send('Webhook is active'));
 app.post('/webhook', (req, res) => {
     const data = req.body;
     
