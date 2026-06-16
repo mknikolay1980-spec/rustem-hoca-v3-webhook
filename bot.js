@@ -50,40 +50,35 @@ app.post('/webhook', async (req, res) => {
 // ─── TEST SIGNAL ──────────────────────────────────────────────────────────────
 
 app.get('/test-signal', async (req, res) => {
-    const symbol = (req.query.symbol || 'XAUUSD').toUpperCase();
-    const mode   = (req.query.mode   || 'SCALP').toUpperCase();
-    const price  = req.query.price   || (symbol === 'US30' ? '44000' : '3385.50');
+  const symbol = req.query.symbol || 'XAUUSD';
+  let msg = '';
 
-    try {
-        const result = await processSignal({ symbol, action: 'BUY', price, mode });
-        if (result.valid) {
-            await sendSignal(result);
-            return res.json({ status: 'sent', signal: result });
-        }
-        if (process.env.BYPASS_FILTERS === 'true') {
-            console.log('🔥 BYPASS AKTIF: Filtreler ez gecildi, test sinyali gonderiliyor');
+  if (symbol === 'US30') {
+    msg = `🏆 RUSTEM HOCA V4.5.2 FINAL
+------------------------------
+🟢 BUY | US30 | ⚡ SCALP
+Entry : 44250.5
+TP1 : 44350.5  | R:R 1:1
+TP2 : 44450.5  | R:R 1:2
+TP3 : 44550.5  | R:R 1:3
+SL : 44150.5
+------------------------------
+⚠️ Risk yönetimi size ait. YTD.`;
+  } else {
+    msg = `🏆 RUSTEM HOCA V4.5.2 FINAL
+------------------------------
+🟢 BUY | XAUUSD | ⚡ SCALP
+Entry : 3392.5
+TP1 : 3397.5   | R:R 1:1
+TP2 : 3402.5   | R:R 1:2
+TP3 : 3407.5   | R:R 1:3
+SL : 3390
+------------------------------
+⚠️ Risk yönetimi size ait. YTD.`;
+  }
 
-            // SAHTE TEST SİNYALİ OLUŞTUR
-            const testSignal = {
-                symbol: 'XAUUSD',
-                direction: 'BUY',
-                type: 'SCALP',
-                entry: 3392.50,
-                tp: 3397.50,
-                sl: 3390.00,
-                rr: '1:2',
-                filters: result.filters,
-                reason: 'TEST MODE - BYPASS AKTIF',
-            };
-
-            await sendSignal(testSignal);
-            return res.json({ status: 'sent', bypass: true, message: 'Test signal sent to Telegram', signal: testSignal });
-        }
-        return res.json({ status: 'filtered', reason: result.reason, filters: result.filters });
-    } catch (err) {
-        console.error('[ERROR] test-signal:', err.message);
-        return res.status(500).json({ error: err.message });
-    }
+  await bot.sendMessage(process.env.CHANNEL_ID, msg);
+  return res.send('OK');
 });
 
 // ─── BACKTEST ─────────────────────────────────────────────────────────────────
