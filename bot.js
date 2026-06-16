@@ -81,7 +81,7 @@ SL : 3390
   }
 
   try {
-    await bot.sendMessage(process.env.CHANNEL_ID, msg);
+    await bot.sendMessage(process.env.TELEGRAM_PREMIUM_CHAT_ID, msg);
     return res.send('OK');
   } catch (err) {
     console.error('[ERROR] test-signal sendMessage:', err.message);
