@@ -62,8 +62,22 @@ app.get('/test-signal', async (req, res) => {
         }
         if (process.env.BYPASS_FILTERS === 'true') {
             console.log('🔥 BYPASS AKTIF: Filtreler ez gecildi, test sinyali gonderiliyor');
-            await sendSignal(result);
-            return res.json({ status: 'sent', bypass: true, message: 'Test signal sent to Telegram' });
+
+            // SAHTE TEST SİNYALİ OLUŞTUR
+            const testSignal = {
+                symbol: 'XAUUSD',
+                direction: 'BUY',
+                type: 'SCALP',
+                entry: 3392.50,
+                tp: 3397.50,
+                sl: 3390.00,
+                rr: '1:2',
+                filters: result.filters,
+                reason: 'TEST MODE - BYPASS AKTIF',
+            };
+
+            await sendSignal(testSignal);
+            return res.json({ status: 'sent', bypass: true, message: 'Test signal sent to Telegram', signal: testSignal });
         }
         return res.json({ status: 'filtered', reason: result.reason, filters: result.filters });
     } catch (err) {
