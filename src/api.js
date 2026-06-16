@@ -14,7 +14,7 @@ async function fetchTwelveData(symbol, interval = '1day', outputsize = 5) {
 }
 
 async function getDXY(interval = '1h') {
-    const values = await fetchTwelveData('DXY', interval, 3);
+    const values = await fetchTwelveData('USDX', interval, 3);
     const current = parseFloat(values[0].close);
     const prev = parseFloat(values[1].close);
     return { current, momentum: ((current - prev) / prev) * 100 };
