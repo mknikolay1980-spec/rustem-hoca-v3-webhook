@@ -6,7 +6,7 @@ const { runFilters } = require('./src/filterPool');
 const { calcSLTP } = require('./src/sltp');
 const TelegramBot = require('node-telegram-bot-api');
 
-const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, { polling: false });
+const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, { polling: false });
 
 const app = express();
 app.use(express.json());
@@ -80,8 +80,13 @@ SL : 3390
 ⚠️ Risk yönetimi size ait. YTD.`;
   }
 
-  await bot.sendMessage(process.env.CHANNEL_ID, msg);
-  return res.send('OK');
+  try {
+    await bot.sendMessage(process.env.CHANNEL_ID, msg);
+    return res.send('OK');
+  } catch (err) {
+    console.error('[ERROR] test-signal sendMessage:', err.message);
+    return res.status(500).json({ error: err.message });
+  }
 });
 
 // ─── BACKTEST ─────────────────────────────────────────────────────────────────
