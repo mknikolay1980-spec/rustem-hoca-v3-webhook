@@ -60,6 +60,11 @@ app.get('/test-signal', async (req, res) => {
             await sendSignal(result);
             return res.json({ status: 'sent', signal: result });
         }
+        if (process.env.BYPASS_FILTERS === 'true') {
+            console.log('🔥 BYPASS AKTIF: Filtreler ez gecildi, test sinyali gonderiliyor');
+            await sendSignal(result);
+            return res.json({ status: 'sent', bypass: true, message: 'Test signal sent to Telegram' });
+        }
         return res.json({ status: 'filtered', reason: result.reason, filters: result.filters });
     } catch (err) {
         console.error('[ERROR] test-signal:', err.message);
