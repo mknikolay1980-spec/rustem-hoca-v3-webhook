@@ -4,6 +4,9 @@ const { processSignal, detectAsset, detectMode } = require('./src/engine');
 const { sendSignal, sendRejection, sendRaw } = require('./src/telegram');
 const { runFilters } = require('./src/filterPool');
 const { calcSLTP } = require('./src/sltp');
+const TelegramBot = require('node-telegram-bot-api');
+
+const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, { polling: false });
 
 const app = express();
 app.use(express.json());
